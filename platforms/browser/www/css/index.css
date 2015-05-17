@@ -21,6 +21,10 @@ body {
 .ui-header {
     text-align: center;
 }
+
+.ui-header>h1>img {
+    width: 3rem;
+}
 .ui-navbar>.ui-grid-b>.ui-block-a>button, .ui-navbar>.ui-grid-b>.ui-block-b>button {
     height: inherit;
     border: solid 1px #E0DFDF;

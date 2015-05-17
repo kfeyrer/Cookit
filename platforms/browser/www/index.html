@@ -28,10 +28,12 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
+        <meta charset="utf-8">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="shortcut icon" href="img/logo.png">
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5.min.css">
         <script type="text/javascript" src="js/libs/jquery-1.11.2.min.js"></script>
@@ -52,16 +54,10 @@
                     <ul class="ui-grid-b">
                         <li class="ui-block-a"><button id="main-tab-button"
                             class="tab-button"
-                            data-tab="#main-tab">Main</button></li>
-                        <li class="ui-block-b"><button id="about-tab-button"
-                                    class="tab-button"
-                                    data-tab="#about-tab">About</button></li>
-                        <li class="ui-block-a"><button id="settings-tab-button"
-                                    class="tab-button"
-                                    data-tab="#settings-tab">Settings</button></li>
+                            data-tab="#main-tab">Alle Rezepte</button></li>
                         <li class="ui-block-b"><button id="caputre-tab-button"
                                     class="tab-button"
-                                    data-tab="#capture-tab">Capture Image</button></li>
+                                    data-tab="#capture-tab">Rezept Hinzufügen</button></li>
                     </ul>
                 </div>
             </footer>

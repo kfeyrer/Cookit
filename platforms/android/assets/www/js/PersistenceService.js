@@ -28,29 +28,34 @@ var SQLiteStorageService = function () {
         var deferred = $.Deferred();
 
         console.log("DEBUG: get my moments... ");
-        db.transaction(function(tx) {
-            tx.executeSql('SELECT * FROM moments', [], function(tx, res) {
-                console.log("DEBUG: we returned from the SQL select statement.. with res= ",res);
-                var moments = [];
-                console.log(res.rows.length);
-                for(var i = 0; i < res.rows.length; i++) {
-                    var moment = { name: res.rows.item(i).name, media: res.rows.item(i).media, description: res.rows.item(i).description };
-                    if (res.rows.item(i).latitude && res.rows.item(i).longitude) {
-                        moment.location = {
-                            latitude: res.rows.item(i).latitude,
-                            longitude: res.rows.item(i).longitude
-                        }
-                    }
-                    console.log("DEBUG: adding moment: ",moment);
-                    moments.push(moment);
-                }
-                console.log("DEBUG: moments ",moments);
-                deferred.resolve(moments);
+        //db.transaction(function(tx) {
+        //    tx.executeSql('SELECT * FROM moments', [], function(tx, res) {
+        //        console.log("DEBUG: we returned from the SQL select statement.. with res= ",res);
+        //        var moments = [];
+        //        console.log(res.rows.length);
+        //        for(var i = 0; i < res.rows.length; i++) {
+        //            var moment = { name: res.rows.item(i).name, media: res.rows.item(i).media, description: res.rows.item(i).description };
+        //            if (res.rows.item(i).latitude && res.rows.item(i).longitude) {
+        //                moment.location = {
+        //                    latitude: res.rows.item(i).latitude,
+        //                    longitude: res.rows.item(i).longitude
+        //                }
+        //            }
+        //            console.log("DEBUG: adding moment: ",moment);
+        //            moments.push(moment);
+        //        }
+        //        console.log("DEBUG: moments ",moments);
+        //        deferred.resolve(moments);
+        //
+        //    }, function(e) {
+        //        console.log("DEBUG: errpr execitomg SQL. No moments ",moments);
+        //        deferred.reject(e);
+        //    });
+        //});
 
-            }, function(e) {
-                console.log("DEBUG: errpr execitomg SQL. No moments ",moments);
-                deferred.reject(e);
-            });
+        $.ajax({url: 'http://localhost:3000/'}).done(function() {
+            console.log('finished');
+            deferred.resolve('test');
         });
         console.log("DEBUG: sql transacction running... ");
         return deferred.promise();

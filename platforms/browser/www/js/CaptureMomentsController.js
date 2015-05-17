@@ -8,7 +8,7 @@ var captureMomentsController = function () {
         initialize: function () {
             self = this;
 
-            $('header')[0].innerHTML = '<h1 role="heading" aria-level="1">Capture your Moment</h1>';
+            $('header')[0].innerHTML = '<h1 role="heading" aria-level="1"><img src="img/logo.png" alt="Cookit Logo"/> CookIt</h1>';
             new SQLiteStorageService().done(function (service) {
                 self.storageService = service;
                 self.bindEvents();
