@@ -68,8 +68,8 @@ var captureMomentsController = function () {
                         var $div = $momentTemplate.clone();
                         var moment = moments[idx];
 
-                        $div.find('.moment-name').text(moment.name);
-                        $div.find('.moment-media').text('<img src="' + moment.media + '"/>');
+                        $div.find('.moment-name').text(moment.title);
+                        $div.find('.moment-media').text(moment.ingredients);
                         $div.find('.moment-description').text(moment.description);
 
                         if (moment.location) {

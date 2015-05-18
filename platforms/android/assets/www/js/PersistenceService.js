@@ -53,9 +53,9 @@ var SQLiteStorageService = function () {
         //    });
         //});
 
-        $.ajax({url: 'http://localhost:3000/'}).done(function() {
+        $.ajax({url: 'http://localhost:3000/'}).done(function(res) {
             console.log('finished');
-            deferred.resolve('test');
+            deferred.resolve(res);
         });
         console.log("DEBUG: sql transacction running... ");
         return deferred.promise();

@@ -20,13 +20,13 @@ app.get("/",function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     connection.query('SELECT * from recipes LIMIT 2', function(err, rows, fields) {
-        connection.end();
         if (!err){
             console.log('The solution is: ', rows);
             res.send(rows);
         }
-        else
+        else {
             console.log('Error while performing Query.');
+        }
     });
 });
 
