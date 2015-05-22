@@ -9,13 +9,9 @@ var captureMomentsController = function () {
             self = this;
 
             $('header')[0].innerHTML = '<h1 role="heading" aria-level="1"><img src="img/logo.png" alt="Cookit Logo"/> CookIt</h1>';
-            new SQLiteStorageService().done(function (service) {
-                self.storageService = service;
-                self.bindEvents();
-                self.renderMainView();
-            }).state(function (errorMessage) {
-                console.log(errorMessage);
-            });
+            self.storageService = new SQLiteStorageService();
+            self.bindEvents();
+            self.renderMainView();
         },
 
 
@@ -27,7 +23,7 @@ var captureMomentsController = function () {
             var tab = $(this).data('tab');
 
             if (tab === '#about-tab') {
-                self.renderAboutView();
+                self.renderDetailView();
             } else if (tab === '#settings-tab') {
                 self.renderSettingsView();
             } else if (tab === '#main-tab') {
@@ -37,10 +33,34 @@ var captureMomentsController = function () {
             }
         },
 
-        renderAboutView: function () {
-            $('.tab-button').removeClass('ui-btn-active');
-            $('#about-tab-button').addClass('ui-btn-active');
-            $("#tab-content").load("./views/about-view.html");
+        renderDetailView: function (e) {
+            var id = e.currentTarget.attributes.getNamedItem('data-id').value;
+            var $tab = $('#tab-content');
+            $tab.empty();
+            $tab.load("./views/detail-view.html", function(data) {
+                $momentTemplate = $('.moment').remove();
+
+                // Load MyMoments here
+                var moments = self.storageService.getMomentbyId(id).done(function(moments) {
+                    var $div = $momentTemplate.clone();
+                    var moment = moments[0];
+
+                    //moment.imageFilePath
+                    var image = self.storageService.getImage('logo.png').done(function(image) {
+                        $div.find('.detail-media').append(image);
+                    });
+                    $div.find('.detail-name').text(moment.name);
+                    $div.find('.detail-description').text(moment.cookingInstruction);
+                    ingredients = moments[1];
+                    ingredients.forEach(function(ingredient) {
+                        $div.find('.detail-ingredients').append('<li>' + ingredient.amount + ' ' + ingredient.name +'</li>');
+                    });
+
+                    $tab.append($div);
+                }).fail(function(error) {
+                    alert(error);
+                });
+            });
         },
 
         renderSettingsView: function () {
@@ -59,31 +79,27 @@ var captureMomentsController = function () {
             var $tab = $('#tab-content');
             $tab.empty();
             $("#tab-content").load("./views/main-view.html", function(data) {
-                $momentTemplate = $('.moment').remove();
+                $momentTemplate = $('#moment').remove();
 
                 // Load MyMoments here
                 var moments = self.storageService.getMoments().done(function(moments) {
 
-                    for(var idx in moments) {
-                        var $div = $momentTemplate.clone();
-                        var moment = moments[idx];
+                    moments.forEach(function(moment) {
+                        var image = self.storageService.getImage('logo.png').done(function(image) {
+                            var $div = $momentTemplate.clone();
 
-                        $div.find('.moment-name').text(moment.title);
-                        $div.find('.moment-media').text(moment.ingredients);
-                        $div.find('.moment-description').text(moment.description);
 
-                        if (moment.location) {
-                            var url =
-                                '<a target="_blank" href="https://www.google.com/maps/preview/@' +
-                                moment.location.latitude + ',' + moment.location.longitude + ',10z">Click to open map</a>';
 
-                            $div.find('.moment-location').html(url);
-                        } else {
-                            $div.find('.moment-location').text("Not specified");
-                        }
+                            $div.find('.ui-btn-text').prepend(image);
+                            $div.find('img').addClass('ui-li-thumb');
+                            $div.attr('data-id', moment.id);
+                            $div.on('click', self.renderDetailView);
+                            $div.find('.ui-li-heading').text(moment.name);
+                            $div.find('.moment-description').text(moment.cookingInstruction);
 
-                        $tab.append($div);
-                    }
+                            $tab.append($div);
+                        });
+                    });
                 }).fail(function(error) {
                     alert(error);
                 });

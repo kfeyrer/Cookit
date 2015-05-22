@@ -2,58 +2,41 @@
  * Created by katrin on 5/5/15.
  */
 var SQLiteStorageService = function () {
-    var service = {},
-        db = window.openDatabase("mymoment", "1.0", "My Moments", 2000);
+    var service = {};
 
     service.initialize = function() {
-        var deferred = $.Deferred();
-        db.transaction(function(tx) {
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS moments ' +
-                '(id integer primary key, name text, media text, description text, latitude real, longitude real)'
-                ,[], function(tx, res) {
-                    tx.executeSql('DELETE FROM moments', [], function(tx, res) {
-                        deferred.resolve(service);
-                    }, function(tx, res) {
-                        deferred.reject('Error initializing database');
-                    });
-                }, function(tx, res) {
-                    deferred.reject('Error initializing database');
-                });
-        });
-        return deferred.promise();
+        return service;
     };
 
     service.getMoments = function() {
         var deferred = $.Deferred();
 
         console.log("DEBUG: get my moments... ");
-        //db.transaction(function(tx) {
-        //    tx.executeSql('SELECT * FROM moments', [], function(tx, res) {
-        //        console.log("DEBUG: we returned from the SQL select statement.. with res= ",res);
-        //        var moments = [];
-        //        console.log(res.rows.length);
-        //        for(var i = 0; i < res.rows.length; i++) {
-        //            var moment = { name: res.rows.item(i).name, media: res.rows.item(i).media, description: res.rows.item(i).description };
-        //            if (res.rows.item(i).latitude && res.rows.item(i).longitude) {
-        //                moment.location = {
-        //                    latitude: res.rows.item(i).latitude,
-        //                    longitude: res.rows.item(i).longitude
-        //                }
-        //            }
-        //            console.log("DEBUG: adding moment: ",moment);
-        //            moments.push(moment);
-        //        }
-        //        console.log("DEBUG: moments ",moments);
-        //        deferred.resolve(moments);
-        //
-        //    }, function(e) {
-        //        console.log("DEBUG: errpr execitomg SQL. No moments ",moments);
-        //        deferred.reject(e);
-        //    });
-        //});
-
         $.ajax({url: 'http://localhost:3000/'}).done(function(res) {
+            console.log('finished');
+            deferred.resolve(res);
+        });
+        console.log("DEBUG: sql transacction running... ");
+        return deferred.promise();
+    };
+
+    service.getMomentbyId = function(id) {
+        var deferred = $.Deferred();
+
+        console.log("DEBUG: get my moments... ");
+        $.ajax({url: 'http://localhost:3000/id/' + id}).done(function(res) {
+            console.log('finished');
+            deferred.resolve(res);
+        });
+        console.log("DEBUG: sql transacction running... ");
+        return deferred.promise();
+    };
+
+    service.getImage = function(name) {
+        var deferred = $.Deferred();
+
+        console.log("DEBUG: get my moments... ");
+        $.ajax({url: 'http://localhost:3000/image/' + name}).done(function(res) {
             console.log('finished');
             deferred.resolve(res);
         });

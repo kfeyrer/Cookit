@@ -29,3 +29,11 @@ body {
     height: inherit;
     border: solid 1px #E0DFDF;
 }
+
+.moment-media>img .detail-media>img{
+    text-align: right;
+    width: 10%;
+}
+#page {
+    background: none;
+}
