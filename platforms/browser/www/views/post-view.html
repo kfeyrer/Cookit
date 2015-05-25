@@ -1,25 +1,21 @@
 <div>
-    <form id="post-moment-form">
-        <div class="form-group">
-            <label for="moment-name">My Moment</label>
-            <input type="text" class="form-control" id="moment-name" placeholder="Name of MyMoment">
+    <h2>Rezept hinzufügen</h2>
+    <form id="post-recipe-form">
+        <label for name>Rezept Name</label>
+        <input type="text" name="name" id="name" placeholder="Rezept Name" required="true"
+               class="ui-input-text ui-shadow-inset ui-corner-all ui-btn-shadow ui-body-c"/>
+        <label for ingredients>Zutaten</label>
+        <div id="ingredients" class=".ingredients">
+            <input type="text" name="ingredient" id="ingredient0" placeholder="Zutat" required="true"
+                   class="ui-input-text ui-shadow-inset ui-corner-all ui-btn-shadow ui-body-c"/>
         </div>
-        <div class="form-group">
-            <label for="company">Media:</label>
-            <input type="text" class="form-control" id="media"
-                   placeholder="image or video">
-            <img src="" id="uploadImage" width="40" height="40" alt="the image we wish to upload" />
-            <button id="capture" type="button" class="btn btn-small">Capture</button>
-        </div>
-        <div class="form-group">
-            <label for="moment-description">Comments</label>
-			<textarea class="form-control" id="moment-description"
-                      placeholder="Description of a greate moment ..." rows="5"></textarea>
-        </div>
+        <label for desc>Beschreibung</label>
+        <textarea name="desc" id="desc" placeholder="Beschreibung" required="true" rows="10" cols="50" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset"/>
 
-        <div class="checkbox">
-            <label><input id="include-location" type="checkbox">Include my location?</label>
-        </div>
-        <button id="submit-moment" type="submit" class="btn btn-default">Add Moment</button>
+        <button data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="b" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+            <span class="ui-btn-inner ui-btn-corner-all">
+                <span class="ui-btn-text">Rezept hinzufügen</span>
+            </span>
+        </button>
     </form>
 </div>

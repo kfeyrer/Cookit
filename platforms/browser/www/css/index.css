@@ -18,8 +18,14 @@ body {
 
 }
 
-.ui-header {
+.ui-header{
     text-align: center;
+    background: lightgrey;
+    height: 6rem;
+}
+
+.ui-bar-a {
+    background: lightgrey;
 }
 
 .ui-header>h1>img {
@@ -34,6 +40,41 @@ body {
     text-align: right;
     width: 10%;
 }
-#page {
-    background: none;
+
+.moment {
+    text-align: center;
+}
+
+.info {
+    text-align:left;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+h3 {
+    text-align: center;
+}
+
+.detail-ingredients {
+    padding-left: 1rem;
+}
+
+label, input {
+    display: block;
+}
+
+input {
+    margin-bottom: 1rem;
+}
+input.ui-input-text{
+    width: 96% !important;
+}
+
+.ui-icon {
+    background-color: rgb(0,0,0,1);
+}
+
+.ui-btn-text {
+    color: white;
+    text-shadow: none;
 }

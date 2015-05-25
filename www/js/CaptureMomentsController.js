@@ -5,6 +5,7 @@ var captureMomentsController = function () {
     var storageService = null;
     var controller = {
         self: null,
+        count: 0,
         initialize: function () {
             self = this;
 
@@ -13,7 +14,6 @@ var captureMomentsController = function () {
             self.bindEvents();
             self.renderMainView();
         },
-
 
         bindEvents: function () {
             $('.tab-button').on('click', this.onTabClick);
@@ -88,8 +88,6 @@ var captureMomentsController = function () {
                         var image = self.storageService.getImage('logo.png').done(function(image) {
                             var $div = $momentTemplate.clone();
 
-
-
                             $div.find('.ui-btn-text').prepend(image);
                             $div.find('img').addClass('ui-li-thumb');
                             $div.attr('data-id', moment.id);
@@ -110,9 +108,27 @@ var captureMomentsController = function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#caputre-tab-button').addClass('ui-btn-active');
             $("#tab-content").load("./views/post-view.html", function (data) {
-                $('#tab-content').find('#post-moment-form').on('submit', self.postMoment);
-                $('#tab-content').find('#capture').on('click', self.captureImage);
+                //$('#tab-content').find('#post-moment-form').on('submit', self.postMoment);
+                //$('#tab-content').find('#capture').on('click', self.captureImage);
+                $('#ingredient0').keyup(self.addIngredient);
             });
+        },
+
+        addIngredient: function(e) {
+            $('#ingredient' + self.count).unbind('keyup');
+            self.count += 1;
+            var input = document.createElement('input');
+            input.type = "text";
+            input.name = "ingredient" + self.count;
+            input.id = "ingredient" + self.count;
+            input.placeholder = "Zutat " + self.count;
+            input.required = "true";
+
+
+            $('#ingredients').append(input);
+
+            $('#ingredient' + self.count).keyup(self.addIngredient);
+            $('#ingredient' + self.count).addClass("ui-input-text ui-shadow-inset ui-corner-all ui-btn-shadow ui-body-c");
         },
 
         postMoment: function (e) {
