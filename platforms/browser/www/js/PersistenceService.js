@@ -8,11 +8,16 @@ var SQLiteStorageService = function () {
         return service;
     };
 
-    service.getMoments = function() {
-        var deferred = $.Deferred();
+    service.getMoments = function(query) {
+        var deferred = $.Deferred(),
+            url = 'http://localhost:3000/';
+
+        if(query) {
+            url += 'search/' + query;
+        }
 
         console.log("DEBUG: get my moments... ");
-        $.ajax({url: 'http://localhost:3000/'}).done(function(res) {
+        $.ajax({url: url}).done(function(res) {
             console.log('finished');
             deferred.resolve(res);
         });
@@ -44,61 +49,15 @@ var SQLiteStorageService = function () {
         return deferred.promise();
     };
 
-    service.addMoment = function(name, media, description, addLocation) {
+    service.addRecipe = function(data) {
         var deferred = $.Deferred();
 
-        if(addLocation) {
-            navigator.geolocation.getCurrentPosition (
-                function(position) {
-                    var pos = {
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude
-                    };
-                    console.log("DEBUG: insert with location ",position);
-                    db.transaction(
-                        function(tx) {
-                            tx.executeSql('INSERT INTO moments (name, media, description, latitude, longitude) VALUES (?,?,?,?,?)',
-                                [name, media, description, lat, lon],
-                                function(tx, res)
-                                {
-                                    console.log('success');
-                                    // resolve deferred object => call any doneCallbacks
-                                    deferred.resolve();
-                                }, function(e)
-                                {
-                                    console.log('failure');
-                                    // reject deferred object => call any failCallbacks
-                                    deferred.reject('Error posting a new moment');
-                                });
-                        },
-                        function() {
-                            // reject deferred object => call any failCallbacks
-                            deferred.reject('Error during save process. ');
-                        }
-                    );
-                    return pos;
-                },
-                function() {
-                    // sorry no position ...
-                    deferred.reject('Error no position found. ');
-                },
-                {maximumAge: 60000, timeout: 5000, enableHighAccuracy: true}
-            );
-        } else {
-            console.log("DEBUG: insert without location ",name);
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO moments (name, media, description) VALUES (?,?,?)', [name, media, description], function(tx, res) {
-                    console.log("DEBUG: success when inserting the moment ",res);
-                    // resolve deferred object => call any doneCallbacks
-                    deferred.resolve();
-                }, function(e) {
-                    console.log("DEBUG: error on inserting ",e);
-                    // reject deferred object => call any failCallbacks
-                    deferred.reject(e);
-                });
-            });
-        }
-
+        console.log("DEBUG: get my moments... ");
+        $.ajax({url: 'http://localhost:3000/add', data:data , type:'POST'}).done(function(res) {
+            console.log('finished');
+            deferred.resolve();
+        });
+        console.log("DEBUG: sql transacction running... ");
         return deferred.promise();
     };
 

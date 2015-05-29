@@ -17,6 +17,7 @@ var captureMomentsController = function () {
 
         bindEvents: function () {
             $('.tab-button').on('click', this.onTabClick);
+            $('#recipe-search').on('click', self.renderMainView);
         },
 
         onTabClick: function () {
@@ -41,20 +42,28 @@ var captureMomentsController = function () {
                 $momentTemplate = $('.moment').remove();
 
                 // Load MyMoments here
-                var moments = self.storageService.getMomentbyId(id).done(function(moments) {
-                    var $div = $momentTemplate.clone();
-                    var moment = moments[0];
+                var moments = self.storageService.getMomentbyId(id).done(function(recipe) {
+                    var $div = $momentTemplate.clone(),
+                        recipe = recipe[0];
 
                     //moment.imageFilePath
-                    var image = self.storageService.getImage('logo.png').done(function(image) {
+                    if(recipe.image === 'NULL') {
+                        recipe.image = 'logo.png';
+                    }
+                    var image = self.storageService.getImage(recipe.image).done(function(image) {
                         $div.find('.detail-media').append(image);
                     });
-                    $div.find('.detail-name').text(moment.name);
-                    $div.find('.detail-description').text(moment.cookingInstruction);
-                    ingredients = moments[1];
+                    $div.find('.detail-name').text(recipe.name);
+                    $div.find('.detail-description').text(recipe.description);
+                    ingredients = recipe.ingredients.split(',');
                     ingredients.forEach(function(ingredient) {
-                        $div.find('.detail-ingredients').append('<li>' + ingredient.amount + ' ' + ingredient.name +'</li>');
+                        var ingredient = ingredient.split(' ');
+                        $div.find('.detail-ingredients').append('<li>' + ingredient[0] + ' ' + ingredient[1] +'</li>');
                     });
+
+                    if(recipe.lat !== 'NULL' && recipe.lon !== 'NULL' && recipe.lat !== null && recipe.lon !== null) {
+                        self.codeLatLng(recipe.lat, recipe.lon);
+                    }
 
                     $tab.append($div);
                 }).fail(function(error) {
@@ -82,10 +91,14 @@ var captureMomentsController = function () {
                 $momentTemplate = $('#moment').remove();
 
                 // Load MyMoments here
-                var moments = self.storageService.getMoments().done(function(moments) {
+                var query = $('#address').val();
+                var moments = self.storageService.getMoments(query).done(function(moments) {
 
                     moments.forEach(function(moment) {
-                        var image = self.storageService.getImage('logo.png').done(function(image) {
+                        if(moment.image === 'NULL') {
+                            moment.image = 'logo.png';
+                        }
+                        var image = self.storageService.getImage(moment.image).done(function(image) {
                             var $div = $momentTemplate.clone();
 
                             $div.find('.ui-btn-text').prepend(image);
@@ -108,50 +121,81 @@ var captureMomentsController = function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#caputre-tab-button').addClass('ui-btn-active');
             $("#tab-content").load("./views/post-view.html", function (data) {
-                //$('#tab-content').find('#post-moment-form').on('submit', self.postMoment);
+                $('#tab-content').find('#post-recipe-form').on('submit', self.postMoment);
                 //$('#tab-content').find('#capture').on('click', self.captureImage);
                 $('#ingredient0').keyup(self.addIngredient);
             });
         },
 
         addIngredient: function(e) {
-            $('#ingredient' + self.count).unbind('keyup');
-            self.count += 1;
-            var input = document.createElement('input');
-            input.type = "text";
-            input.name = "ingredient" + self.count;
-            input.id = "ingredient" + self.count;
-            input.placeholder = "Zutat " + self.count;
-            input.required = "true";
+            if(e.keyCode !== 9) {
+                $('#ingredient' + self.count).unbind('keyup');
+                self.count += 1;
+                var input = document.createElement('input');
+                input.type = "text";
+                input.name = "ingredient" + self.count;
+                input.id = "ingredient" + self.count;
+                input.placeholder = "Zutat " + self.count;
 
+                $('#ingredients').append(input);
 
-            $('#ingredients').append(input);
-
-            $('#ingredient' + self.count).keyup(self.addIngredient);
-            $('#ingredient' + self.count).addClass("ui-input-text ui-shadow-inset ui-corner-all ui-btn-shadow ui-body-c");
+                var ingredient = $('#ingredient' + self.count);
+                ingredient.keyup(self.addIngredient);
+                ingredient.addClass("ui-input-text ui-shadow-inset ui-corner-all ui-btn-shadow ui-body-c");
+            }
         },
 
         postMoment: function (e) {
             e.preventDefault();
-            var name = $('#moment-name').val();
-            var description = $('#moment-description').val();
-            var media = $('#media').val();
-            var addLocation = $('#include-location').is(':checked');
+            var name = $('#name').val(),
+                description = $('#desc').val(),
+                allIngredients = [];
 
-            if (!name || !description) {
-                alert('Please fill in fields name and description');
-                return;
+            var ingredients = $('#ingredients').find('input');
+
+            for(var i = 0; i<ingredients.length; i++) {
+                var value = $('#ingredient' + i).val();
+                if(value !== "") {
+                    allIngredients.push($('#ingredient' + i).val());
+                }
+            };
+
+            if(allIngredients.length > 1) {
+                allIngredients = allIngredients.join(',');
+            };
+            //var media = $('#media').val();
+            var addLocation = $('#location').is(':checked');
+
+            if(addLocation) {
+                navigator.geolocation.getCurrentPosition (
+                function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    var result = self.storageService.addRecipe({name: name, description: description, ingredients: allIngredients.toString(), lat: lat, lon: lon});
+
+                    result.done(function() { // promise: deferred object is resolved
+                        alert('Another Moment successfully added');
+                        $('#ingredient' + self.count).unbind('keyup');
+                        self.count = 0;
+                        self.renderMainView();
+                    }).fail(function(error) { // promise: deferred object is rejected
+                        alert(error);
+                    });
+                });
             } else {
-                var result = self.storageService.addMoment( // return deferred object
-                    name, media, description, addLocation);
+                var result = self.storageService.addRecipe({name: name, description: description, ingredients: allIngredients.toString(), lat: 'NULL', lon: 'NULL'});
 
                 result.done(function() { // promise: deferred object is resolved
                     alert('Another Moment successfully added');
+                    $('#ingredient' + self.count).unbind('keyup');
+                    self.count = 0;
                     self.renderMainView();
                 }).fail(function(error) { // promise: deferred object is rejected
                     alert(error);
                 });
             }
+
         },
 
         captureImage: function(){
@@ -190,6 +234,37 @@ var captureMomentsController = function () {
             function onFail(message) {
                 console.log('Failed because: ' + message);
             }
+        },
+
+        codeLatLng: function (lat, lng) {
+            var geocoder = new google.maps.Geocoder(),
+                latlng = new google.maps.LatLng(lat, lng);
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        //find country name
+                        var city = null;
+                        for (var i=0; i<results[0].address_components.length; i++) {
+                            for (var b=0;b<results[0].address_components[i].types.length;b++) {
+
+                                //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+                                if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                                    //this is the object you are looking for
+                                    city= results[0].address_components[i];
+                                    break;
+                                }
+                            }
+                        }
+                        //city data
+                        document.getElementById('city').innerHTML = ('Erstellt in: ' + city.long_name);
+
+                    } else {
+                        console.log("No results found");
+                    }
+                } else {
+                    console.log("Geocoder failed due to: " + status);
+                }
+            });
         }
     };
     controller.initialize();
