@@ -42,14 +42,18 @@
         <script type="text/javascript" src="js/libs/jquery.mobile-1.4.5.min.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <title>Hello World</title>
+
     </head>
     <body>
+    <div id="fb-root"></div>
         <div data-role="page" id="page">
-            <header data-role="header" ata-position="fixed" style="background: lightgrey;"></header>
+            <header data-role="header" data-position="fixed" style="background: lightgrey;"></header>
+
+            <span id="msg"></span>
 
             <div id="search">
-                <input id="address" type="search" placeholder="Name of My Moment ..." class="form-control">
-                <button class="btn btn-default" type="button" id="recipe-search">Filter Moments</button>
+                <input id="address" type="search" placeholder="Rezeptname" class="form-control">
+                <button class="btn btn-default" type="button" id="recipe-search">Rezept suchen</button>
             </div>
 
             <article id="tab-content" data-role="main" class="ui-content">
@@ -72,6 +76,7 @@
         <script type="text/javascript" src="js/PersistenceService.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/CaptureMomentsController.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     </body>
 </html>

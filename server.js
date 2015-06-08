@@ -1,13 +1,14 @@
 var express    = require("express"),
     mysql      = require('mysql'),
-    fs = require('fs');
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'Cookit'
-});
-var app = express();
+    fs = require('fs'),
+    connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        database : 'Cookit'
+    }),
+    app = express(),
+    expressWs = require('express-ws')(app);
 
 connection.connect(function(err){
     if(!err) {
@@ -22,7 +23,6 @@ app.get("/",function(req,res){
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     connection.query('SELECT id, name, image from recipes', function(err, rows, fields) {
         if (!err){
-            console.log('The solution is: ', rows);
             res.send(rows);
         }
         else {
@@ -35,8 +35,6 @@ app.get("/id/:id", function(req, res) {
     var id = req.params.id;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    var recipe,
-        ingredients;
     connection.query('SELECT * from recipes WHERE id=' + id, function(err, rows, fields) {
         if (!err){
             console.log('The solution is: ', rows);
@@ -62,7 +60,8 @@ app.post("/add", function(req, res) {
         lat = req.body.lat,
         lon = req.body.lon;
 
-    connection.query('INSERT INTO recipes (name, ingredients, description, image, lat, lon) VALUES (?, ?, ?, ?, ?, ?);', [recipeName, ingredients, desc, image, lat, lon], function(err, rows) {
+    connection.query('INSERT INTO recipes (name, ingredients, description, image, lat, lon) VALUES (?, ?, ?, ?, ?, ?);',
+        [recipeName, ingredients, desc, image, lat, lon], function(err, rows) {
         if(err) {
             console.log(err);
         } else {
@@ -71,20 +70,24 @@ app.post("/add", function(req, res) {
     });
 });
 
+app.ws('/', function(ws, req) {
+    console.log('message send');
+    ws.send(JSON.stringify({'event': 'msg', 'msg': 'Eine neues Rezept wurde hinzugefügt! <a href="/">Jetzt ansehen</a>'}));
+});
+
 app.get("/search/:query", function(req, res) {
     var query = req.params.query;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     connection.query('SELECT * FROM recipes WHERE LOWER(name) LIKE "%' + query + '%"', function(err, rows, fields) {
         if (!err){
-            console.log('The solution is: ', rows);
             res.send(rows);
         }
         else {
             console.log('Error while performing Query.');
         }
     });
-})
+});
 
 app.get("/image/:name", function(req, res) {
     var path = 'www/img/' + req.params.name;
@@ -98,4 +101,5 @@ app.get("/image/:name", function(req, res) {
         res.end('"/>');
     });
 });
+
 app.listen(3000);
