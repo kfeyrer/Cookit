@@ -134,27 +134,27 @@ var captureMomentsController = function () {
             });
         },
 
-        captureImage: function() {
-            console.log('try to capture the image!');
-            navigator.camera.getPicture(onSuccess, onFail, {
-                quality: 10,
-                destinationType: Camera.DestinationType.FILE_URI
-            });
-
-            function onSuccess(imageURI) {
-                var image = $('#uploadImage');
-                console.log('INFO: Path to image' + imageURI);
-                image.attr('src',imageURI);
-                console.log('we set the image ' + imageURI + ' on screen!');
-                $('#capture').hide();
-                $('#media').val(imageURI);
-            }
-
-            function onFail(message) {
-                console.log('Failed because: ' + message);
-                alert("You have to make a photo!")
-            }
-        },
+        //captureImage: function() {
+        //    console.log('try to capture the image!');
+        //    navigator.camera.getPicture(onSuccess, onFail, {
+        //        quality: 10,
+        //        destinationType: Camera.DestinationType.FILE_URI
+        //    });
+        //
+        //    function onSuccess(imageURI) {
+        //        var image = $('#uploadImage');
+        //        console.log('INFO: Path to image' + imageURI);
+        //        image.attr('src',imageURI);
+        //        console.log('we set the image ' + imageURI + ' on screen!');
+        //        $('#capture').hide();
+        //        $('#media').val(imageURI);
+        //    }
+        //
+        //    function onFail(message) {
+        //        console.log('Failed because: ' + message);
+        //        alert("You have to make a photo!")
+        //    }
+        //},
 
         addRecipe: function (e) {
             e.preventDefault();

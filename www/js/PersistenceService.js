@@ -3,7 +3,7 @@
  */
 var SQLiteStorageService = function () {
     var service = {},
-        basisUrl = 'http://localhost:8001/'; //'http://cookit.ddns.net:65431/';
+        basisUrl = 'http://cookit.ddns.net:65431/';
 
     service.initialize = function() {
         return service;
