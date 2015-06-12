@@ -3,7 +3,7 @@
  */
 var SQLiteStorageService = function () {
     var service = {},
-        basisUrl = 'http://localhost:3000/';
+        basisUrl = 'http://localhost:8001/'; //'http://cookit.ddns.net:65431/';
 
     service.initialize = function() {
         return service;
@@ -18,7 +18,6 @@ var SQLiteStorageService = function () {
         }
 
         $.ajax({url: url}).done(function(res) {
-            console.log('finished');
             deferred.resolve(res);
         });
         return deferred.promise();
@@ -28,7 +27,6 @@ var SQLiteStorageService = function () {
         var deferred = $.Deferred();
 
         $.ajax({url: basisUrl + 'id/' + id}).done(function(res) {
-            console.log('finished');
             deferred.resolve(res);
         });
         return deferred.promise();
@@ -38,7 +36,6 @@ var SQLiteStorageService = function () {
         var deferred = $.Deferred();
 
         $.ajax({url: basisUrl + 'image/' + name}).done(function(res) {
-            console.log('finished');
             deferred.resolve(res);
         });
         return deferred.promise();
@@ -48,10 +45,8 @@ var SQLiteStorageService = function () {
         var deferred = $.Deferred();
 
         $.ajax({url: basisUrl + 'add', data:data , type:'POST'}).done(function(res) {
-            console.log('finished');
             deferred.resolve();
         });
-        console.log("DEBUG: sql transacction running... ");
         return deferred.promise();
     };
 

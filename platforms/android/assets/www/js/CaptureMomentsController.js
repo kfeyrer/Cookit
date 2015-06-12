@@ -7,7 +7,7 @@ var captureMomentsController = function () {
         self: null,
         count: 0,
         recipeIds: [],
-        //ws: new WebSocket('ws://localhost:3000/'),
+        ws: new WebSocket('ws://localhost:8001/'),
         initialize: function () {
             self = this;
 
@@ -15,10 +15,10 @@ var captureMomentsController = function () {
             self.storageService = new SQLiteStorageService();
             self.bindEvents();
             self.renderMainView();
-            //self.ws.onmessage = function (data) {
-            //    var message = JSON.parse(data.data).msg;
-            //    $('#msg')[0].innerHTML = message;
-            //};
+            self.ws.onmessage = function (data) {
+                var message = JSON.parse(data.data).msg;
+                $('#msg')[0].innerHTML = message;
+            };
         },
 
         bindEvents: function () {
@@ -198,7 +198,6 @@ var captureMomentsController = function () {
                 var result = self.storageService.addRecipe({name: name, description: description, ingredients: allIngredients.toString(), lat: 'NULL', lon: 'NULL'});
 
                 result.done(function() { // promise: deferred object is resolved
-                    alert('Another Moment successfully added');
                     $('#ingredient' + self.count).unbind('keyup');
                     self.count = 0;
                     self.ws.send('done');

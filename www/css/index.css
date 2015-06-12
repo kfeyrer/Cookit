@@ -91,5 +91,21 @@ input.ui-input-text{
 }
 
 #recipe-search {
+    float: left;
     height: 3rem;
+    width: 48%;
+}
+
+#uploadImage {
+    width: 40%;
+}
+
+#random-recipe {
+    float: right;
+    height: 3rem;
+    width: 48%;
+}
+
+#tab-content {
+    clear: both;
 }

@@ -17,7 +17,6 @@ connection.connect(function(err){
         console.log("Error connecting database ... \n\n");
     }
 });
-
 app.get("/",function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -46,7 +45,6 @@ app.get("/id/:id", function(req, res) {
     });
 });
 
-//app.use(express.bodyParser());
 var bodyParser = require('body-parser');
 app.use(bodyParser());
 app.post("/add", function(req, res) {
@@ -65,15 +63,31 @@ app.post("/add", function(req, res) {
         if(err) {
             console.log(err);
         } else {
+            for (var i=0; i < clients.length; i++) {
+                clients[i].send(JSON.stringify({
+                    'event': 'msg',
+                    'msg': 'Eine neues Rezept wurde hinzugef&uumlgt!'
+                }));
+            }
             res.send('finished');
         }
     });
 });
 
-app.ws('/', function(ws, req) {
-    console.log('message send');
-    ws.send(JSON.stringify({'event': 'msg', 'msg': 'Eine neues Rezept wurde hinzugefügt! <a href="/">Jetzt ansehen</a>'}));
+app.post("/image", function(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    var file = req.body;
+    console.log(file);
 });
+
+function saveFile(name,fileobj){
+    console.log(JSON.stringify(fileobj) );
+    console.log("filename = ", fileobj.originalFilename);
+    console.log("path=",fileobj.path);
+    // copy from temp path
+    fs.createReadStream(fileobj.path).pipe(fs.createWriteStream(name));
+}
 
 app.get("/search/:query", function(req, res) {
     var query = req.params.query;
@@ -102,4 +116,9 @@ app.get("/image/:name", function(req, res) {
     });
 });
 
-app.listen(3000);
+var clients = [];
+
+app.ws('/', function (ws, req) {
+    clients.push(ws);
+});
+app.listen(8001);

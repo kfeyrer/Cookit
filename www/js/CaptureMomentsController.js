@@ -7,7 +7,7 @@ var captureMomentsController = function () {
         self: null,
         count: 0,
         recipeIds: [],
-        //ws: new WebSocket('ws://localhost:3000/'),
+        ws: new WebSocket('ws://localhost:8001/'),
         initialize: function () {
             self = this;
 
@@ -15,10 +15,10 @@ var captureMomentsController = function () {
             self.storageService = new SQLiteStorageService();
             self.bindEvents();
             self.renderMainView();
-            //self.ws.onmessage = function (data) {
-            //    var message = JSON.parse(data.data).msg;
-            //    $('#msg')[0].innerHTML = message;
-            //};
+            self.ws.onmessage = function (data) {
+                var message = JSON.parse(data.data).msg;
+                $('#msg')[0].innerHTML = message;
+            };
         },
 
         bindEvents: function () {
@@ -134,27 +134,27 @@ var captureMomentsController = function () {
             });
         },
 
-        captureImage: function() {
-            console.log('try to capture the image!');
-            navigator.camera.getPicture(onSuccess, onFail, {
-                quality: 10,
-                destinationType: Camera.DestinationType.FILE_URI
-            });
-
-            function onSuccess(imageURI) {
-                var image = $('#uploadImage');
-                console.log('INFO: Path to image' + imageURI);
-                image.attr('src',imageURI);
-                console.log('we set the image ' + imageURI + ' on screen!');
-                $('#capture').hide();
-                $('#media').val(imageURI);
-            }
-
-            function onFail(message) {
-                console.log('Failed because: ' + message);
-                alert("You have to make a photo!")
-            }
-        },
+        //captureImage: function() {
+        //    console.log('try to capture the image!');
+        //    navigator.camera.getPicture(onSuccess, onFail, {
+        //        quality: 10,
+        //        destinationType: Camera.DestinationType.FILE_URI
+        //    });
+        //
+        //    function onSuccess(imageURI) {
+        //        var image = $('#uploadImage');
+        //        console.log('INFO: Path to image' + imageURI);
+        //        image.attr('src',imageURI);
+        //        console.log('we set the image ' + imageURI + ' on screen!');
+        //        $('#capture').hide();
+        //        $('#media').val(imageURI);
+        //    }
+        //
+        //    function onFail(message) {
+        //        console.log('Failed because: ' + message);
+        //        alert("You have to make a photo!")
+        //    }
+        //},
 
         addRecipe: function (e) {
             e.preventDefault();
@@ -198,7 +198,6 @@ var captureMomentsController = function () {
                 var result = self.storageService.addRecipe({name: name, description: description, ingredients: allIngredients.toString(), lat: 'NULL', lon: 'NULL'});
 
                 result.done(function() { // promise: deferred object is resolved
-                    alert('Another Moment successfully added');
                     $('#ingredient' + self.count).unbind('keyup');
                     self.count = 0;
                     self.ws.send('done');

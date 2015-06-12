@@ -34,6 +34,9 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         controller = new captureMomentsController();
+        var fbLoginSuccess = function (userData) {
+            alert("UserInfo: " + JSON.stringify(userData));
+        };
     }
 };
 
