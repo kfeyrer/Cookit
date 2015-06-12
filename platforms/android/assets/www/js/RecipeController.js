@@ -44,6 +44,10 @@ var recipeController = function () {
             }
         },
 
+        /*
+        gets all recipes from the server and renderes it as list
+        saves all ids in the recipeIds array for the random recipes
+         */
         renderMainView: function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#main-tab-button').addClass('ui-btn-active');
@@ -81,11 +85,19 @@ var recipeController = function () {
             });
         },
 
+        /*
+        calculates a random number between 0 and the amount of the recipes
+        calls renderDetailView with the specific random recipeId
+         */
         randomRecipe: function() {
             var random = Math.floor((Math.random() * self.recipeIds.length));
             self.renderDetailView(null, self.recipeIds[random]);
         },
 
+        /*
+        gets recipe by id and renders it as the detail view
+        if latitude and longitude and google maps are available, the location can be found
+         */
         renderDetailView: function (e, recipeId) {
             var id = null;
                 if(e) {
@@ -129,6 +141,10 @@ var recipeController = function () {
             });
         },
 
+        /*
+        renders the add recipe form.
+        adds the keyup event to the ingredient input field
+         */
         renderAddRecipeView: function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#caputre-tab-button').addClass('ui-btn-active');
@@ -140,6 +156,12 @@ var recipeController = function () {
             });
         },
 
+        /*
+        gets all form values and sends it to the server
+        adds the current location to the sent data if location should be added
+        gets ingredients from all ingredient input fields and connects them with a ","
+        this is needed, as there is only one ingredients field in the database
+         */
         addRecipe: function (e) {
             e.preventDefault();
             var name = $('#name').val(),
