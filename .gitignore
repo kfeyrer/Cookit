@@ -218,3 +218,5 @@ pip-log.txt
 node_modules/.bin/cordova.cmd
 node_modules/.bin/istanbul
 *.cmd
+platforms/android/.gradle/2.2.1/taskArtifacts/cache.properties.lock
+*.bin
