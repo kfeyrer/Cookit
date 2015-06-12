@@ -119,6 +119,9 @@ app.get("/image/:name", function(req, res) {
 var clients = [];
 
 app.ws('/', function (ws, req) {
+    ws.on('close', function() {
+        clients.splice(ws, 1);
+    });
     clients.push(ws);
 });
 app.listen(8001);
