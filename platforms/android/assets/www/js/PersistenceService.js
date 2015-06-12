@@ -3,7 +3,7 @@
  */
 var SQLiteStorageService = function () {
     var service = {},
-        basisUrl = 'http://localhost:8001/'; //'http://cookit.ddns.net:65431/';
+        basisUrl = 'http://cookit.ddns.net:65431/';
 
     service.initialize = function() {
         return service;
@@ -49,27 +49,6 @@ var SQLiteStorageService = function () {
         });
         return deferred.promise();
     };
-
-    //service.uploadFile = function(fileURI, filename) {
-    //    var formData = new FormData();
-    //
-    //    formData.append(filename, fileURI, filename);
-    //
-    //    var xhr = new XMLHttpRequest();
-    //    // Open the connection.
-    //    xhr.open('POST', basisUrl + 'image', true);
-    //    // Set up a handler for when the request finishes.
-    //    xhr.onload = function () {
-    //        if (xhr.status === 200) {
-    //            console.log('connection successful');
-    //        } else {
-    //            console.log('An error occurred!');
-    //        }
-    //    };
-    //
-    //    // Send the Data.
-    //    xhr.send(formData);
-    //};
 
     return service.initialize();
 };

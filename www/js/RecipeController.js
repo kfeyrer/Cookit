@@ -1,13 +1,19 @@
 /**
  * Created by katrin on 5/3/15.
  */
-var captureMomentsController = function () {
+var recipeController = function () {
     var storageService = null;
     var controller = {
         self: null,
         count: 0,
         recipeIds: [],
-        ws: new WebSocket('ws://localhost:8001/'),
+        ws: new WebSocket('ws://cookit.ddns.net:65431/'),
+        /*
+        sets Header text and Logo
+        bind events to tab buttons, header and search buttons
+        adds a listener for the websocket onmessage
+        renders
+         */
         initialize: function () {
             self = this;
 
@@ -38,6 +44,10 @@ var captureMomentsController = function () {
             }
         },
 
+        /*
+        gets all recipes from the server and renderes it as list
+        saves all ids in the recipeIds array for the random recipes
+         */
         renderMainView: function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#main-tab-button').addClass('ui-btn-active');
@@ -75,11 +85,19 @@ var captureMomentsController = function () {
             });
         },
 
+        /*
+        calculates a random number between 0 and the amount of the recipes
+        calls renderDetailView with the specific random recipeId
+         */
         randomRecipe: function() {
             var random = Math.floor((Math.random() * self.recipeIds.length));
             self.renderDetailView(null, self.recipeIds[random]);
         },
 
+        /*
+        gets recipe by id and renders it as the detail view
+        if latitude and longitude and google maps are available, the location can be found
+         */
         renderDetailView: function (e, recipeId) {
             var id = null;
                 if(e) {
@@ -123,6 +141,10 @@ var captureMomentsController = function () {
             });
         },
 
+        /*
+        renders the add recipe form.
+        adds the keyup event to the ingredient input field
+         */
         renderAddRecipeView: function () {
             $('.tab-button').removeClass('ui-btn-active');
             $('#caputre-tab-button').addClass('ui-btn-active');
@@ -134,28 +156,12 @@ var captureMomentsController = function () {
             });
         },
 
-        captureImage: function() {
-            console.log('try to capture the image!');
-            navigator.camera.getPicture(onSuccess, onFail, {
-                quality: 10,
-                destinationType: Camera.DestinationType.FILE_URI
-            });
-
-            function onSuccess(imageURI) {
-                var image = $('#uploadImage');
-                console.log('INFO: Path to image' + imageURI);
-                image.attr('src',imageURI);
-                console.log('we set the image ' + imageURI + ' on screen!');
-                $('#capture').hide();
-                $('#media').val(imageURI);
-            }
-
-            function onFail(message) {
-                console.log('Failed because: ' + message);
-                alert("You have to make a photo!")
-            }
-        },
-
+        /*
+        gets all form values and sends it to the server
+        adds the current location to the sent data if location should be added
+        gets ingredients from all ingredient input fields and connects them with a ","
+        this is needed, as there is only one ingredients field in the database
+         */
         addRecipe: function (e) {
             e.preventDefault();
             var name = $('#name').val(),

@@ -1,3 +1,7 @@
+/*Adds a new ingredient field
+* Removes onkeyup event from current ingredient field
+* Adds onkeyup event to new ingredient field
+*/
 function addIngredient (e) {
     if(e.keyCode !== 9) {
         $('#ingredient' + self.count).unbind('keyup');
@@ -16,6 +20,9 @@ function addIngredient (e) {
     }
 };
 
+/*gets state from latitude and longitude
+* google maps must be available
+*/
 function codeLatLng(lat, lng) {
     var geocoder = new google.maps.Geocoder(),
         latlng = new google.maps.LatLng(lat, lng);

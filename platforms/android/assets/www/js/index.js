@@ -33,7 +33,7 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        controller = new captureMomentsController();
+        controller = new recipeController();
         var fbLoginSuccess = function (userData) {
             alert("UserInfo: " + JSON.stringify(userData));
         };

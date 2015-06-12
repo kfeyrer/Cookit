@@ -81,14 +81,6 @@ app.post("/image", function(req, res) {
     console.log(file);
 });
 
-function saveFile(name,fileobj){
-    console.log(JSON.stringify(fileobj) );
-    console.log("filename = ", fileobj.originalFilename);
-    console.log("path=",fileobj.path);
-    // copy from temp path
-    fs.createReadStream(fileobj.path).pipe(fs.createWriteStream(name));
-}
-
 app.get("/search/:query", function(req, res) {
     var query = req.params.query;
     res.header("Access-Control-Allow-Origin", "*");
