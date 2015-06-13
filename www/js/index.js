@@ -34,9 +34,6 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         controller = new recipeController();
-        var fbLoginSuccess = function (userData) {
-            alert("UserInfo: " + JSON.stringify(userData));
-        };
     }
 };
 

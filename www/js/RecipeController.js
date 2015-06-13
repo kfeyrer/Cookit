@@ -150,8 +150,6 @@ var recipeController = function () {
             $('#caputre-tab-button').addClass('ui-btn-active');
             $("#tab-content").load("./views/post-view.html", function (data) {
                 $('#tab-content').find('#post-recipe-form').on('submit', self.addRecipe);
-                $('#tab-content').find('#capture').on('click', self.captureImage);
-                //$('#tab-content').find('#capture').on('click', self.captureImage);
                 $('#ingredient0').keyup(addIngredient);
             });
         },
@@ -181,7 +179,6 @@ var recipeController = function () {
                 allIngredients = allIngredients.join(',');
             }
 
-            var media = $('#media').val();
             var addLocation = $('#location').is(':checked');
 
             if(addLocation && window.google) {
@@ -206,7 +203,6 @@ var recipeController = function () {
                 result.done(function() { // promise: deferred object is resolved
                     $('#ingredient' + self.count).unbind('keyup');
                     self.count = 0;
-                    self.ws.send('done');
                     self.renderMainView();
                 }).fail(function(error) { // promise: deferred object is rejected
                     alert(error);

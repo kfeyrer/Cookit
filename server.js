@@ -74,13 +74,6 @@ app.post("/add", function(req, res) {
     });
 });
 
-app.post("/image", function(req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    var file = req.body;
-    console.log(file);
-});
-
 app.get("/search/:query", function(req, res) {
     var query = req.params.query;
     res.header("Access-Control-Allow-Origin", "*");
